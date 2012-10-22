@@ -1,0 +1,4 @@
+main: main.cpp Stats.o
+	g++ main.cpp Stats.o
+Stats.o: Stats.cpp Stats.h
+	g++ -c Stats.cpp

@@ -1,0 +1,29 @@
+instead of a.exe
+program name "stats
+
+spose numbers are in file called numbers.dat
+stats numbers.dat
+.... 
+summery stats output
+
+
+So....
+Store numbers in a dynamic array say "element" number of data points is N
+
+Mean= sum of numbers/n...
+for loop with a sum variable.
+initialize double sum = 0
+
+for(int i=0;i<n;i++){
+sum+=element[i];
+}
+
+after loop sum = x1+x2+x3......
+sum/=N;
+or 
+sum = sum/N;
+
+Median= middle of the data
+
+for odd N the middle..
+for even set av of the two middle elements

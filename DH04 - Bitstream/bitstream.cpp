@@ -1,0 +1,158 @@
+#include "bitstream.h"
+
+//obitstream contstructor
+obitstream::obitstream(){
+  bitpos = 0;
+  bytebuffer = 0;
+}
+
+//obitstream destructor
+obitstream::~obitstream(){
+  flush();
+  close();
+}
+
+//writes to file
+void obitstream::flush(){
+  file_out<<bytebuffer;
+  bytebuffer = 0;
+  bitpos = 0;
+
+}
+
+//opens output file
+void obitstream::open(const char* filename){
+  filenames = filename;
+  file_out.open(filename);
+}
+
+//closes output file
+void obitstream::close(){
+  file_out.close();
+}
+
+//puts a 1 or 0 in bytebuffer, flushes when full.
+void obitstream::putbit(int c){
+  unsigned char mask = 1;
+ 
+  if(bitpos == 8){
+    flush();
+  }
+  mask = mask << bitpos;
+  if(c==0){
+    bytebuffer = bytebuffer & (~mask);
+  }
+  else if(c==1){
+    bytebuffer = bytebuffer | mask;
+  }
+  bitpos++;
+
+}
+
+//checks if the next bit is 1 or 0
+bool obitstream::checkbit(int n, int pos){
+  int intmask =1;
+  intmask = intmask<<pos;
+  if(intmask == (n&intmask))return 1;
+  else{return 0;}
+}
+
+//puts an int to file in b bits
+void obitstream::putint(int n, int b){
+  int intmask = 1;
+  int counter = 0;
+  for(counter=0; (counter<b) && (counter < 32); counter++){
+    if(checkbit(n, counter)){putbit(1);}
+    else{putbit(0);}
+  }
+}
+
+
+//IBITSTREAM!!
+
+ 
+//ibitstream contsructor
+ibitstream::ibitstream(){
+  bitpos = -1;
+  bytebuffer = 0;
+}
+
+//ibitstream destructor
+ibitstream::~ibitstream(){
+  close();
+}
+
+//opens input file
+void ibitstream::open(const char* filename){
+  file_in.clear();
+  file_in.open(filename);
+  if(file_in.fail()){
+    cout<<"No such file exists, silly."<<endl;
+  }
+}
+
+//closes input file.
+void ibitstream::close(){
+  file_in.close();
+}
+
+//gets the next bit from the input file.
+bool ibitstream::getbit(int &b){
+   unsigned char mask = 1;
+   if(bitpos == 8 || bitpos == -1){
+     bitpos = 0;
+     bytebuffer = file_in.get();
+     if(file_in.eof()) return false;
+   }
+   mask = mask<<bitpos;
+   bitpos++;
+   if(mask == (bytebuffer&mask)){
+     b = 1;
+     return true; }
+   else{
+     b = 0; 
+     return true; }
+}
+
+//gets the next int from input file in b bit representation.
+bool ibitstream::getint(int& n, int b){
+  int intmask = 1;
+  int bit = 0;
+  n=0;
+  bool flag = true;
+  for(int counter = 0; counter < b; counter ++){
+
+    flag = getbit(bit);
+    if(!flag)return false;
+    if(bit==1) { n = n|intmask; }
+    else { n = n&(~intmask); }
+    intmask = intmask << 1;
+  }
+  return true;
+}
+
+
+//returns true if eof is reached
+bool ibitstream::eof(){
+  if(file_in.eof()){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+//checks whether next bit is 0 or 1
+bool ibitstream::checkbit(int n, int pos){
+  int intmask =1;
+  intmask = intmask<<pos;
+  if(intmask == (n&intmask))return 1;
+  else{return 0;}
+}
+
+//test function used for testing...
+int ibitstream::get(){
+int durka;
+durka = file_in.get();
+return durka;
+}

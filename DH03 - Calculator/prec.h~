@@ -1,0 +1,22 @@
+#define ADD 0
+#define SUB 1
+#define MLT 2
+#define DIV 3
+#define UNM 4
+#define LPR 5
+#define RPR 6
+#define DLR 7
+#define END 8
+
+static const bool prec[PREC.DIM][PREC.DIM]=
+  {      /* ADD SUB MLT DIV UNM LPR RPR DLR END */
+    /*ADD*/{ 0,  0,  0,  0,  0,  1,  0,  1,  0 },
+    /*SUB*/{ 0,  0,  0,  0,  0,  1,  0,  1,  0 },
+    /*MLT*/{ 1,  1,  0,  0,  0,  1,  0,  1,  0 },
+    /*DIV*/{ 1,  1,  0,  0,  0,  1,  0,  1,  0 },
+    /*UNM*/{ 1,  1,  1,  1,  1,  1,  0,  1,  0 },
+    /*LPN*/{ 1,  1,  1,  1,  1,  1,  0,  1,  0 },
+    /*RPN*/{ 0,  0,  0,  0,  0,  1,  0,  1,  0 },
+    /*DLR*/{ 0,  0,  0,  0,  0,  0,  0,  0,  0 },
+    /*END*/{ 0,  0,  0,  0,  0,  0,  0,  0,  0 }
+  };

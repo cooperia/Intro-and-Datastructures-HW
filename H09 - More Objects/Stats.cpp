@@ -1,0 +1,201 @@
+#include "Stats.h"
+
+
+//Public Functions...
+
+//Default Constructor
+Stats::Stats(){
+  _cardinality = 0;
+  _element = new double[10];
+  _chunk_size = 10;
+  _array_size = 10;
+  //cout<<"Default Constructor."<<endl;
+}
+
+//Destructor
+Stats::~Stats(){
+  delete[]_element;
+  //cout<<">>DESTRUCTOR!!!!11oneone<<"<<endl;
+}
+
+//Copy Constructor.
+Stats::Stats(const Stats& a){
+  _element=new double[a._array_size];
+  _cardinality=a._cardinality;
+  _array_size=a._array_size;
+  _chunk_size=a._chunk_size;
+  for(int i=0;i<a._cardinality;i++){
+    _element[i]=a._element[i];
+  }
+  //cout<<"Copy Constructor."<<endl;
+}
+
+//Operator overload for '='.
+Stats& Stats::operator=(const Stats& a){
+  if(this== &a){
+    return *this;
+  }
+  delete[]_element;
+  _cardinality = a._cardinality;
+  _array_size=a._array_size;
+  _chunk_size=(a._chunk_size);
+  _element=new double[a._array_size];
+  for(int i=0;i<a._cardinality;i++){
+    _element[i]=a._element[i];
+  }
+  //cout<<"operator overload."<<endl;
+  return *this;
+}
+
+
+
+//Reports the number of elements in a set.
+unsigned int Stats::cardinality() const{
+  return _cardinality;
+}
+
+//Adds user specified double to set if it isn't already an element.
+void Stats::add(const double add){
+  if(!_cardinality==0){
+    if((_cardinality)%(_chunk_size)==0){
+      _grow();
+    }
+  }
+  _element[_cardinality] = add;
+  _cardinality++;
+}
+
+//Prints each element of a set in terminal.
+void Stats::print() const{
+  for(int i=0;i<_cardinality;i++){
+    cout << _element[i];
+    if(i<_cardinality-1){
+      cout<<", ";
+    }
+  }
+}
+
+//Clears a set.
+void Stats::clear(){
+  _cardinality = 0;
+  while(_array_size>_chunk_size){
+    _shrink();
+  }
+}
+
+//Calculates the median of a set of data and reports it.
+void Stats::median(Stats& a){
+  _sort(a);
+  int b = a._cardinality%2;
+  if(a._cardinality%2!=0){
+    int x = (a._cardinality-1)/2;
+    cout<<"The median is: "<<a._element[x]<<"."<<endl;
+  }
+  else{
+    double y = (a._element[a._cardinality/2]+a._element[(a._cardinality/2)-1])/2.0;
+    cout<<"The median is: "<<y<<"."<<endl;
+  }
+  //cout<<"I ran the median function."<<endl;
+}
+
+//Calculates the mean of a set of data and reports it.
+double Stats::mean() const{
+  double sum;
+  for(int i=0;i<_cardinality;i++){   
+    sum+=_element[i];
+  }
+  double N;
+  N = (double)_cardinality;
+  double mean;
+  mean = sum/N;
+  cout<<"The mean is: "<<mean<<"."<<endl;
+  return mean;
+}
+
+//Calculates that standard deviation of a set of data and reports it.
+void Stats::stndDev(double x){
+  double sum;
+  for(int i=0;i<_cardinality;i++){
+    sum+=pow((_element[i]-x),2.0);
+  }
+  double N;
+  N = (double)_cardinality;
+  double dev;
+  //dev = pow((sum/N),(1.0/2.0));
+  dev = sqrt(sum/N);
+  cout<<"The standard deviation is: "<<dev<<"."<<endl;
+}
+
+//Load function.
+void Stats::load(const char* A){
+  ifstream inputfile(A);
+  if(inputfile.fail()){
+    cout<<"You fail miserably at loading stuff."<<endl;
+    exit(1);
+  }
+
+  double x;
+  while(inputfile >> x){
+    add(x);
+  }
+  inputfile.close();
+  inputfile.clear();
+
+  cout<<"There are "<<_cardinality<<" data points in this file."<<endl;
+
+}
+
+
+//Private Functions..
+
+//Grow function. Increases _array_size by _chunk_size.
+void Stats::_grow(){
+  double *temp = new double[_array_size+_chunk_size];
+  for(int i=0;i<_cardinality;i++){
+    temp[i]=_element[i];
+  }
+  delete[]_element;
+  _element = temp;
+  _array_size=(_array_size + _chunk_size);
+  temp = NULL;
+  //cout<<"Things are getting bigGER!!."<<endl;
+}
+
+//Shrink function. Decreases _array_size by _chunk_size.
+void Stats::_shrink(){
+  double *temp = new double[_array_size-_chunk_size];
+  for(int i=0; i<_cardinality;i++){
+    temp[i]=_element[i];
+  }
+  delete[]_element;
+  _element = temp;
+  _array_size=(_array_size-_chunk_size);
+  temp=NULL;
+  //cout<<"THINGS ARE GETTING SMALler."<<endl;
+}
+
+//Swaps two data points in an array.
+void Stats::_swap(double *x, double *y){
+  double z;
+  z=*x;
+  *x=*y;
+  *y=z;
+}
+
+//Sorts data points in an array from least to greatest. 
+void Stats::_sort(Stats& a){
+  bool swapped = true;
+  int j = 0;
+  while(swapped && j<(_cardinality-1)){
+    swapped = false;
+    for(int i = 0;i<a._cardinality-(1+j);i++){
+      if(a._element[i]>a._element[i+1]){
+	_swap(&a._element[i], &a._element[i+1]);
+	swapped = true;
+      }
+    }
+    j++;
+  }
+}
+
+

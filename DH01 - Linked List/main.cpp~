@@ -1,0 +1,240 @@
+//Current Problems:
+//No Destructor yet.
+#include <iostream>
+#include <cstring>
+#include <cmath>
+#include <cstdlib>
+#include "node.h"
+using namespace std;
+
+#define RETURN '\n'
+#define SPACE ' '
+
+double reportMedian(node* head,int numPts);
+
+int numPoints(node* head);
+
+double reportMean(node* head);
+
+void stndDev(node* head, double median, int numPts);
+
+void list_ins(double dat, node* &head);
+
+void list_ins_last(double dat,node* cursor);
+
+void list_ins_first(double dat,node* &head);
+
+void load(const char* A, node* & head);
+
+void print(node* head);
+
+void delete_list(node* &head);
+
+int main(int argc, char **argv){
+
+    double median= 0;
+    int numPts = 0;
+    ifstream inputfile;
+    node* head = NULL;
+    if(argc > 1){
+    load(argv[1], head);
+    }
+ 
+
+
+
+    while(1){
+      if(argc > 1){
+      print(head);
+      numPts = numPoints(head);
+      reportMean(head);
+      median = reportMedian(head,numPts);
+      stndDev(head,median,numPts);
+      }
+      cout<<"Please enter a real number you would like to add to the list: ";
+
+      if(cin.peek() == SPACE){
+	while(cin.peek() == SPACE){
+	  cin.get();
+	}
+      }
+      if(cin.peek()==RETURN){
+	break;
+      }
+      double newNum;
+      cin >> newNum;
+      if(head = NULL){
+	head = new node(newNum,NULL);
+      }
+      list_ins(newNum,head);
+      while(cin.peek() != RETURN){cin.get();}
+      cin.get();
+      
+    }
+    delete_list(head);
+return 0;
+}
+
+int numPoints(node* head){
+  node* cursor = NULL;
+  int counter = 0;
+
+  for(cursor = head; cursor != NULL; cursor = cursor -> get_next()){
+    counter++;
+  }
+  cout<<"Number of Points: "<<counter<<endl;
+  return counter;
+}
+
+double reportMedian(node* head, int numPts){
+   node* cursor = NULL;
+   int counter;
+   counter = numPts;
+
+   if(counter % 2 == 0){
+     double firstMed;
+     double secondMed;
+     int med = counter/2;
+     int count = 1;
+     cursor = head;
+     while(count < (med+1)){
+       if(count == med){
+	 firstMed = cursor -> get_data();
+	 secondMed = cursor -> get_next() -> get_data();
+	 break;
+       }
+       count++;
+       cursor = cursor -> get_next();
+     }
+     double median;
+     median = (firstMed+secondMed)/2;
+     cout<<"Median: "<<median<<endl;
+     return median;
+   }
+   else{
+     int med = (counter+1)/2;
+     int count = 1;
+     double median;
+
+     cursor = head;
+     while(count != (med + 1)){
+       if(count == med){
+	 median = cursor -> get_data();
+	 cout<<"Median: "<<median<<endl;
+	 return median;
+       }
+       count++;
+       cursor = cursor -> get_next();
+     }
+   }
+}
+
+double reportMean(node* head){
+  node* cursor = NULL;
+  double sum = 0;
+  int counter = 0;
+  for(cursor = head; cursor != NULL; cursor = cursor -> get_next()){
+    sum = sum + (cursor -> get_data());
+    counter++;
+  }
+  double mean;
+  mean = sum/counter;
+  cout<<"Mean: "<<mean<<endl;
+  return mean;
+}
+
+void stndDev(node* head, double median, int numPts){
+  node* cursor = NULL;
+  double sum = 0;
+  double dev;
+
+  for(cursor = head; cursor != NULL; cursor = cursor -> get_next()){
+    sum+=pow(((cursor -> get_data())-median),2.0);
+  }
+
+  dev = sqrt(sum/numPts);
+  cout<<"Standard Deviation: "<<dev<<endl;
+}
+
+void list_ins(double dat,node* &head){
+  node* cursor = NULL;
+  int counter = 0;
+  for(cursor = head; cursor != NULL; cursor = cursor -> get_next()){
+    if(counter == 0 && (cursor -> get_data()) >= dat){
+      list_ins_first(dat,head);
+      break;
+    }
+    if((cursor -> get_next()) == NULL){
+      list_ins_last(dat,cursor);
+      break;
+    }
+    if((cursor -> get_data()) < dat){
+      node * check = NULL;
+      check = (cursor -> get_next());
+      if((check -> get_data()) > dat || (check -> get_data()) ==  dat){
+	node* temp = NULL;
+	temp = new node(dat,check);
+	cursor -> set_next(temp);
+	break;
+      }
+    }
+    counter++;
+  }
+}
+
+void list_ins_last(double dat, node* cursor){
+  node* temp = NULL;
+  temp = new node(dat,NULL);
+  cursor -> set_next(temp);
+  cout<<"LAST!!!"<<endl;
+}
+
+void list_ins_first(double dat,node* &head){
+  node* temp = NULL;
+  temp = new node(dat,head);
+  head = temp;
+  cout<<"FIRST!!"<<endl;
+}
+
+void load(const char* A,node* &head){
+  ifstream inputfile(A);
+  if(inputfile.fail()){
+    cout<<"You have just failed the retard check.(Your file failed to load.)"<<endl;
+    exit(1);
+  }
+  double x;
+  bool first = true;
+  while(inputfile>>x){
+    if(first == true){
+      head= new node(x,NULL);
+    }
+    else{list_ins(x, head);}
+    first = false;
+  }
+  inputfile.close();
+  inputfile.clear();
+}
+
+void print(node* head){
+  node* cursor = NULL;
+  for(cursor = head; cursor != NULL; cursor = cursor -> get_next()){
+    cout<<cursor -> get_data() << endl;
+   }
+}
+
+void delete_list(node* &head){
+  while((head -> get_next()) != NULL){
+    node* temp = NULL;
+    temp = head;
+    head = (head -> get_next());
+    delete temp;
+  }
+  node* temp = NULL;
+  temp = head;
+  //I'm assuming here that C++ knows how to get rid of a node* that is set to NULL
+  head = NULL;
+  delete  temp;
+
+}
+
+

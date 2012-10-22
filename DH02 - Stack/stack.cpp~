@@ -1,0 +1,86 @@
+#include "stack.h"
+
+//Public Functions:
+
+
+stack::stack(){
+  _head = NULL;
+  _size = 0;
+}
+
+stack::~stack(){
+  node* temp = NULL;
+  while((_head -> get_next()) != NULL){
+    temp = _head;
+    _head = (_head -> get_next());
+    delete temp;
+  }
+  node* temper = NULL;
+  temper = _head;
+  _head = NULL;
+  delete temp;
+  //not sure i need these...
+  delete _head;
+  _size = 0;
+}
+
+stack::stack(const stack& durka){
+//neeeds work!!!
+}
+
+stack& stack::operator=(const stack& durka){
+  //needs work!!!
+}
+
+double stack::pop(){
+  double value = 0;
+  value = (_head -> get_data());
+  node* temp = NULL;
+  temp = _head;
+  _head = (_head -> get_next());
+  delete temp;
+  _size--;
+  return value;
+}
+
+void stack::push(double data){
+  node* temp = NULL;
+  temp = new node(data, _head);
+  _head = temp;
+  _size++;
+}
+
+double stack::top(){
+  double dat = 0;
+  dat = (_head -> get_data());
+  return dat;
+}
+
+void stack::clear(){
+  node* temp = NULL;
+  while((_head -> get_next()) != NULL){
+    temp = _head;
+    _head = (_head -> get_next());
+    delete temp;
+  }
+  node* temper = NULL;
+  temper = _head;
+  _head = NULL;
+  delete temp;
+  _size = 0;
+}
+
+int stack::size(){
+  return _size;
+}
+
+void stack::print(){
+  node* cursor = NULL;
+  cout<<"The stack contains: ";
+  for(cursor = _head; cursor != NULL; cursor = cursor -> get_next()){
+    if((cursor -> get_next()) != NULL){
+      cout<<cursor -> get_data() <<", ";
+    }
+    else{cout<<cursor -> get_data() << endl;}
+  }
+}

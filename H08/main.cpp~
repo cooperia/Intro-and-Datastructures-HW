@@ -1,0 +1,29 @@
+#include <iostream>
+#include "Set.h"
+using namespace std;
+
+Set function(Set);
+int main(){
+  Set a;
+  Set b;
+  Set c;
+
+
+
+  a.add(-1);
+  a.add(2);
+  a.add(3);
+  cout<<"We made it this far."<<endl;
+
+  b=a;
+  cout<<b;
+
+
+return 0;
+}
+
+
+Set function(Set a){
+  cout<<"We made it this far."<<endl; 
+return a;
+}

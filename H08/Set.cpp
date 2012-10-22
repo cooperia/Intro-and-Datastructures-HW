@@ -1,0 +1,264 @@
+//Author:Ian Cooper
+//Date: March 30, 2008
+//This is the defenition file for a class called "Set". The class stores elements of a set in an array and has the following friend functions and class functions.
+
+//In addition to the required additions called for in the assignment, there is a new member function called size() that will print out _chunk_size and _array_size.
+
+
+#include "Set.h"
+
+//Default Constructor
+Set::Set(){
+  _cardinality = 0;
+  _element = new int[10];
+  _chunk_size = 10;
+  _array_size = 10;
+  //cout<<"Default Constructor."<<endl;
+}
+
+//Specified Constructor
+Set::Set(int a){
+  _cardinality = 0;
+  _array_size = a;
+  _chunk_size = a;
+  _element = new int[_chunk_size];
+  //cout<<"Argument Constructor."<<endl;
+}
+
+//Destructor
+Set::~Set(){
+  delete[]_element;
+  //cout<<">>DESTRUCTOR!!!!11oneone<<"<<endl;
+}
+
+//Copy Constructor.
+Set::Set(const Set& a){
+  _element=new int[a._array_size];
+  _cardinality=a._cardinality;
+  _array_size=a._array_size;
+  _chunk_size=a._chunk_size;
+  for(int i=0;i<a._cardinality;i++){
+    _element[i]=a._element[i];
+  }
+  //cout<<"Copy Constructor."<<endl;
+}
+
+//Operator overload for '='.
+Set& Set::operator=(const Set& a){
+  if(this== &a){
+  return *this;
+  }
+ delete[]_element;
+  _cardinality = a._cardinality;
+  _array_size=a._array_size;
+  _chunk_size=(a._chunk_size);
+  _element=new int[a._array_size];
+ for(int i=0;i<a._cardinality;i++){
+   _element[i]=a._element[i];
+ }
+ //cout<<"operator overload."<<endl;
+ return *this;
+}
+
+//Feedback stuff for me.
+int Set::size() const{
+  cout<<"Array size is: "<<_array_size<<endl;
+  cout<<"Chunk size is: "<<_chunk_size<<endl;
+  cout<<"Cardinality is: "<<_cardinality<<endl;
+}
+
+//Checks if a user specified int is a member of a set.
+bool Set::isElement(const int isEl) const{
+  for(int i=0;i<_cardinality;i++){
+    if(isEl == _element[i]){
+      return true;
+    }
+  }
+  return false;
+}
+
+//Adds user specified int to set if it isn't already an element.
+void Set::add(const int add){
+  if(!isElement(add)){
+    if(!_cardinality==0){
+      if((_cardinality)%(_chunk_size)==0){
+      _grow();
+      }
+    }
+    _element[_cardinality] = add;
+    _cardinality++;
+  }
+}
+
+//Removes user specified int from set if it is an element.
+void Set::remove(const int rem){
+  for(int i=0;i<_cardinality;i++){
+    if(_element[i]==rem){
+      _element[i]=_element[_cardinality-1];
+      _cardinality--;
+      if(_array_size-_cardinality==_chunk_size){
+	_shrink();	
+      }
+      break;
+    }
+  }
+}
+
+//Clears a set.
+void Set::clear(){
+  _cardinality = 0;
+  while(_array_size>_chunk_size){
+    _shrink();
+    }
+}
+
+//Reports the number of elements in a set.
+unsigned int Set::cardinality() const{
+  return _cardinality;
+}
+
+//Prints each element of a set in terminal.
+void Set::print() const{
+  for(int i=0;i<_cardinality;i++){
+    cout << _element[i];
+    if(i<_cardinality-1){
+      cout<<", ";
+    }
+  }
+}
+
+
+//Friend Functions.
+
+//Operator over load for '+': union.
+Set operator+(const Set& a, const Set& b){
+  int chunk;
+  if(a._chunk_size>b._chunk_size){
+    chunk = a._chunk_size;
+  }
+  else{
+    chunk = b._chunk_size;
+  }
+  Set c(chunk);
+  for(int i=0;i<a.cardinality();i++){
+    c.add(a._element[i]);
+  }
+  for(int t=0;t<b.cardinality();t++){
+    c.add(b._element[t]);
+  }
+  return c;
+}
+
+//Operator overload for '+=':adds an int to a set if it is not already an element.
+void operator+=(Set& a, const int v){
+  a.add(v);
+}
+
+//Operator overload for '-=':removes an int from a set if it is an element.
+bool operator-=(Set& a, const int v){
+  if(a.isElement(v)){
+    a.remove(v);
+    return true;
+  }
+  return false;
+}
+
+//Operator overload for '*':creates and returns intersectin set of sets a and b.
+Set operator*(const Set& a, const Set& b){
+  Set c;
+  for(int i=0;i<a._cardinality;i++){
+    for(int t=0;t<b._cardinality;t++){
+      if(a._element[i]==b._element[t]){
+	c.add(a._element[i]);
+      }
+    }
+  }
+  return c;
+}
+
+//Operator overload for '<<':allows cout<<a; where a is a set.
+ostream& operator<<(ostream& output, const Set& a){
+  for(int i=0;i<a._cardinality;i++){
+    cout << a._element[i];
+    if(i<a._cardinality-1){
+      cout<<", ";
+    }
+  }
+  return output;
+}
+
+//Overload operator for '<':returns true if left is a subset of right.
+bool operator<(const Set& a, const Set& b){
+  if(a._cardinality==0){
+    return true;
+  }
+  for (int i=0;i<a._cardinality;i++){
+    if(!b.isElement(a._element[i])){
+	 return false;
+    }
+  }
+  return true;
+}
+
+//Overload operator for '>':returns true if right is a subset of left.
+bool operator>(const Set& a, const Set& b){
+  for(int i=0;i<b._cardinality;i++){
+    for(int t=0;a._cardinality;t++){
+      if(b._element[i]==a._element[t]){
+	break;
+      }
+      if(t==(a._cardinality-1)){
+	return false;
+      }
+    }
+  }
+  return true;
+}
+
+//Overload operator for '<':returns true if left int is an element of right set.
+bool operator<(const int v, const Set& a){
+  if(a.isElement(v)){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+//Overload operator for '>':returns true if right int is an element of left set.
+bool operator>(const Set& a, const int v){
+  if(a.isElement(v)){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+//Private Functions.
+
+//Grow function. Increases _array_size by _chunk_size.
+void Set::_grow(){
+  int *temp = new int[_array_size+_chunk_size];
+  for(int i=0;i<_cardinality;i++){
+    temp[i]=_element[i];
+  }
+  delete[]_element;
+  _element = temp;
+  _array_size=(_array_size + _chunk_size);
+  temp = NULL;
+  //cout<<"Things are getting bigGER!!."<<endl;
+}
+
+//Shrink function. Decreases _array_size by _chunk_size.
+void Set::_shrink(){
+  int *temp = new int[_array_size-_chunk_size];
+  for(int i=0; i<_cardinality;i++){
+    temp[i]=_element[i];
+  }
+  delete[]_element;
+  _element = temp;
+  _array_size=(_array_size-_chunk_size);
+  temp=NULL;
+  //cout<<"THINGS ARE GETTING SMALler."<<endl;
+}

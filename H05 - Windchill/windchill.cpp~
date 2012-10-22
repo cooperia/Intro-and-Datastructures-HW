@@ -1,0 +1,106 @@
+//Author: Ian Cooper
+//Date: Feb 25, 08
+//Purpose: Calculates wind chill. 
+
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double GetTemp(double temp, char unit);
+double GetSpeed(double speed, char unit);
+char GetUnit(char unit);
+double WindChill(double speed, double temp, char unit);
+
+int main(){
+  char unit;
+  double temp;
+  double speed;
+  double chill;
+  unit = 'm';
+  speed = 10;
+  temp = 0;
+  
+  do{
+    unit = GetUnit(unit);
+    temp = GetTemp(temp, unit);
+    speed = GetSpeed(speed, unit);
+    chill = WindChill(speed, temp, unit);
+
+    cout << "You entered:\n";
+    cout << "\n";
+    cout << "Wind Speed = " << speed << "\n";
+    cout << "Initial Temperature = " << temp << "\n";
+    cout << "Units = " << unit << ", where m is Metric and e is English.\n";
+    cout << "\n";
+    cout << "The new temperature with adjustment for windchill is " << chill << " degrees.\n";
+    cout << "\n";
+    
+    cout << "Would you like to do another calculation[Y/n]\n";
+    
+    if(cin.peek() == 'n' || cin.peek() == 'N'){
+      break;
+    }
+    else{
+      while(cin.peek() != '\n'){cin.get();}
+      cin.get();
+    }
+  }while(1);
+  
+
+}
+//Gets the user's desired units.
+char GetUnit(char unit){
+  cout<< "Please enter either 'm' for Metric units or 'e' for English units["<<unit<<"]\n";
+
+  if(cin.peek() != '\n'){
+    cin >> unit;
+  }
+  cin.get();
+  return unit;
+}
+
+//Gets the user's desired value for initial temperature. 
+double GetTemp(double temp, char unit){
+  if(unit != 'm'){
+    temp = ((9.0/5.0) * temp) + 32;
+  }
+  cout<< "Please enter the current temperature without windchill["<<temp<<"]:\n";
+  if(cin.peek()!= '\n'){
+    cin >> temp;
+  }
+  cin.get();
+  return temp;
+}
+
+//Gets the user's desired value for wind speed.    
+double GetSpeed(double speed, char unit){
+  if(unit != 'm'){
+    speed = speed * 2.23693629;
+  }
+  cout<< "Please enter the current wind speed["<<speed<<"]:\n";
+  if(cin.peek() != '\n'){
+    cin >> speed;
+  }
+  cin.get();
+  return speed;
+}
+//Calculates windchill using the user's input.
+double WindChill(double speed, double temp, char unit){
+  double chilly;
+  if(unit != 'm'){
+    speed = speed/2.23693629;
+    temp = (temp - 32)*(5.0/9.0);
+  }
+
+  chilly = 13.12 + (0.6215*temp) - (11.37*(pow(speed,0.16))) + (0.3965*temp*(pow(speed,0.16)));
+
+  if(unit != 'm'){
+    chilly = ((9.0/5.0) * chilly) + 32;
+  }
+  
+  return chilly;
+}
+
+
+//I cant figure out how to make the repeats use the values from the previous run as their defaults. I was able to make it work by just reinitializing the variable each run but that doesnt really conform to your rules. 

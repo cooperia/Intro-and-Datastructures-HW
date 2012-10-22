@@ -1,0 +1,46 @@
+#ifndef NODE_H
+#define NODE_H
+#include <fstream>
+#include <cstdlib>
+#include <cmath>
+#include <iostream>
+using namespace std;
+
+class node {
+
+ public:
+
+  //Constructor
+  node();
+
+  node(double, node*);
+
+  ~node();
+
+  void set_data(double);
+
+  void set_next(node*);
+
+  double get_data();
+
+  node* get_next();
+
+  //void print();
+
+  //void list_ins(double,node*&);
+
+  // void list_ins_last(double,node*);
+
+  //void list_ins_first(double,node*&);
+
+  //  void load(const char* A, node*);
+    
+
+
+ private:
+  double _data;
+  node* _next;
+  
+};
+#endif
+

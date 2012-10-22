@@ -1,0 +1,171 @@
+//Author:Ian Cooper
+//Date: March 30, 2008
+//This is the defenition file for a class called "Set". The class stores elements of a set in an array and has the following friend functions and class functions.
+
+#include "Set.h"
+
+//Constructor
+Set::Set(){
+  _cardinality = 0;
+}
+
+//Checks if a user specified int is a member of a set.
+bool Set::isElement(const int isEl) const{
+  for(int i=0;i<_cardinality;i++){
+    if(isEl == _element[i]){
+      return true;
+    }
+  }
+  return false;
+}
+
+//Adds user specified int to set if it isn't already an element.
+void Set::add(const int add){
+  if(isElement(add)){}
+  else{
+    _element[_cardinality] = add;
+    _cardinality++;
+  }
+}
+
+//Removes user specified int from set if it is an element.
+void Set::remove(const int rem){
+  for(int i=0;i<_cardinality;i++){
+    if(_element[i]==rem){
+      _element[i]=_element[_cardinality-1];
+      _cardinality--;
+    }
+  }
+}
+
+//Clears a set.
+void Set::clear(){
+  _cardinality = 0;
+}
+
+//Reports the number of elements in a set.
+unsigned int Set::cardinality() const{
+  return _cardinality;
+}
+
+//Prints each element of a set in terminal.
+void Set::print() const{
+  for(int i=0;i<_cardinality;i++){
+    cout << _element[i];
+    if(i<_cardinality-1){
+      cout<<", ";
+    }
+  }
+  cout <<"\n";
+}
+
+
+//Friend Functions.
+
+//Operator over load for '+': union.
+Set operator+(const Set& a, const Set& b){
+  Set c;
+  for(int i=0;i<a.cardinality();i++){
+    c.add(a._element[i]);
+  }
+  for(int t=0;t<b.cardinality();t++){
+    c.add(b._element[t]);
+  }
+  return c;
+}
+
+//Operator overload for '+=':adds an int to a set if it is not already an element.
+void operator+=(Set& a, const int v){
+  if(a.isElement(v)){}
+  else{
+    a._element[a._cardinality]=v;
+    a._cardinality++;
+  }
+}
+
+//Operator overload for '-=':removes an int from a set if it is an element.
+bool operator-=(Set& a, const int v){
+  for(int i=0;i<a._cardinality;i++){
+    if(a._element[i]==v){
+      a._element[i]=a._element[a._cardinality-1];
+      a._cardinality--;
+      return true;
+    }
+  }
+  return false;
+}
+
+//Operator overload for '*':creates and returns intersectin set of sets a and b.
+Set operator*(const Set& a, const Set& b){
+  Set c;
+  for(int i=0;i<a._cardinality;i++){
+    for(int t=0;t<b._cardinality;t++){
+      if(a._element[i]==b._element[t]){
+	c.add(a._element[i]);
+      }
+    }
+  }
+  return c;
+}
+
+//Operator overload for '<<':allows cout<<a; where a is a set.
+ostream& operator<<(ostream& output, const Set& a){
+  for(int i=0;i<a._cardinality;i++){
+    cout << a._element[i];
+    if(i<a._cardinality-1){
+      cout<<", ";
+    }
+  }
+  cout<<"\n";
+  return output;
+}
+
+//Overload operator for '<':returns true if left is a subset of right.
+bool operator<(const Set& a, const Set& b){
+  for(int i=0;i<a._cardinality;i++){
+    for(int t=0;t<b._cardinality;t++){
+      if(a._element[i]==b._element[t]){
+	break;
+      }
+      if(t==(b._cardinality-1)){
+	return false;
+      }
+    }
+  }
+  return true;
+}
+
+//Overload operator for '>':returns true if right is a subset of left.
+bool operator>(const Set& a, const Set& b){
+  for(int i=0;i<b._cardinality;i++){
+    for(int t=0;a._cardinality;t++){
+      if(b._element[i]==a._element[t]){
+	break;
+      }
+      if(t==(a._cardinality-1)){
+	return false;
+      }
+    }
+  }
+  return true;
+}
+
+//Overload operator for '<':returns true if left int is an element of right set.
+bool operator<(const int v, const Set& a){
+  if(a.isElement(v)){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+//Overload operator for '>':returns true if right int is an element of left set.
+bool operator>(const Set& a, const int v){
+  if(a.isElement(v)){
+    return true;
+  }
+  else{
+    return false;
+  }
+}

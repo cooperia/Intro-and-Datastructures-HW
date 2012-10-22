@@ -1,0 +1,24 @@
+//File Name: arg.cpp
+//Author: Albert Schueller
+//Email Address: schuelaw@whitman.edu
+//Assignment Number:
+//Description: demonstrates the use of the argument array.
+//Last Changed:
+
+#include <iostream>
+
+using namespace std;
+
+int main(int argc, char **argv) {
+  int i;
+
+  for(i=0;i<argc;i++) {
+    cout << "argv[" << i << "]=" << argv[i] << endl;
+  }
+
+
+  return 0;
+}
+
+make
+stats datafile.dat

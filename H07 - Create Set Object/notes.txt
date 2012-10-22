@@ -1,0 +1,19 @@
+~get make same way you get c++ under dev folder.
+~install that shit same way...
+
+in make...{
+main: main.cpp Complex.o
+        g++ main.cpp Complex.o
+
+Complex.o: Complex.cpp Complex.h
+        g++ -c Complex.cpp
+}
+
+to run make "xemacs Makefile"
+do the above....
+from there on to compile and stuff "make"
+___________________________________
+
+must have output stream as argument for << friend function.
+function returns output
+

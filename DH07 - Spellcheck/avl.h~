@@ -1,0 +1,77 @@
+#ifndef AVL_H
+#define AVL_H
+#include <string>
+#define BST_ARRAY_SIZE 127
+
+using namespace std;
+
+class avl_node{
+ public:
+  avl_node(){
+    _word = "";
+    _parent = NULL;
+    _lchild = NULL;
+    _rchild = NULL;
+    _balance = 0;
+  }
+
+  string get_word() const{return _word;}
+  void set_word(string word) {_word = word;}
+
+  avl_node* get_parent() const {return _parent;}
+  void set_parent(avl_node* parent) {_parent = parent;}
+
+  avl_node* get_rchild() const {return _rchild;}
+  void set_rchild(avl_node* rchild) {_rchild = rchild;}
+
+  avl_node* get_lchild() const {return _lchild;}
+  void set_lchild(avl_node* lchild) {_lchild = lchild;}
+
+  int get_balance() const {return _balance;}
+  void set_balance(int balance) {_balance = balance;}
+
+ private:
+  string _word;
+  avl_node* _parent;
+  avl_node* _lchild;
+  avl_node* _rchild;
+  int _balance;
+};
+
+class avl{
+ public:
+  avl();
+  ~avl();
+
+  void insert(string);
+
+  void print_tree();
+
+  bool is_element(string);
+
+  avl_node* search(string);
+
+  void bst_to_array(avl_node*, int);
+
+
+ private:
+  void rebalance(avl_node*);
+
+  void leftleft(avl_node*);
+
+  void rightright(avl_node*);
+
+  void rightleft(avl_node*);
+
+  void leftright(avl_node*);
+
+  void delete_tree(avl_node*);
+
+
+  avl_node* _root;
+  int _size;
+  avl_node* a[BST_ARRAY_SIZE];
+
+};
+
+#endif

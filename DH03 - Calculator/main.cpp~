@@ -1,0 +1,136 @@
+//Author:Ian Cooper
+//Class:Data Structures
+//Date:9/15/08
+//Why:Programming is kickass!. 
+
+//Current Problems:
+//No Destructor yet.
+#include <iostream>
+#include <cstring>
+#include <cmath>
+#include <cstdlib>
+#include "opstack.h"
+#include "numstack.h"
+#include "ops.h"
+using namespace std;
+
+//Definitions.
+#define RETURN '\n'
+#define SPACE ' '
+#define ADD 0
+#define SUB 1
+#define MLT 2
+#define DIV 3
+#define UNM 4
+#define LPR 5
+#define RPR 6
+#define DLR 7
+#define END 8
+#define PERIOD '.'
+#define SPACE ' '
+#define PRECDIM 9
+
+bool exec_op(opstack&, numstack&);
+
+void parse(opstack&, numstack&);
+
+void parse_op(opstack&, numstack&);
+
+int main(){
+  numstack nums;
+  opstack ops;
+
+
+  cout<<"Pease enter an expression. Close your expression with ';'"<<endl;
+
+  parse(ops,nums);
+  cout<<nums.top()<<endl;
+
+  return 0;
+}
+
+void parse(opstack& ops, numstack& nums){
+  double num = 0;
+  char op = 0;
+  int top_op = 0;
+  int new_op = 0;
+  bool unms = true;
+  while(cin.peek() == SPACE){
+      cin.get();
+    }
+  while(cin.peek() != ';'){
+    while(cin.peek() == SPACE){
+      cin.get();
+    }
+    if(cin.peek() == 0-9 || PERIOD){
+      cin>>num;
+      nums.push(num);
+    }
+    else{
+      cin>>op;
+      switch(op){
+      case '+':
+	new_op = ADD;
+	top_op = ops.top();
+	if(prec[new_op][top_op]){
+	  ops.push(ADD);
+	  break;
+	}
+	else{
+	  exec_op(ops, nums);
+
+  }
+}
+
+ 
+
+bool exec_op(opstack& ops, numstack& nums){
+
+  double x, y;
+  bool error = false;
+  int op;
+  op = ops.pop();
+
+
+
+  switch(op){
+  case ADD:
+    y = nums.pop();
+    x = nums.pop();
+    nums.push(x+y);
+    break;
+
+  case SUB:
+    y = nums.pop();
+    x = nums.pop();
+    nums.push(x-y);
+    break;
+
+  case MLT:
+    y = nums.pop();
+    x = nums.pop();
+    nums.push(x*y);
+    break;
+
+  case DIV:
+    y = nums.pop();
+    x = nums.pop();
+    nums.push(x/y);
+    break;
+
+  case UNM:
+    y = nums.pop();
+    nums.push(-y);
+    break;
+
+  case LPR:
+    ops.pop();
+    break;
+
+  default:
+    error = true;
+    break;
+  }
+  return error;
+}
+

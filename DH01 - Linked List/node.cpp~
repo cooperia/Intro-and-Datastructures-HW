@@ -1,0 +1,105 @@
+#include "node.h"
+
+//Public Functions:
+
+node::node(){
+  _next = NULL;
+}
+
+node::node(double data, node* next){
+  _next = next;
+  _data = data;
+}
+
+node::~node(){
+}
+
+void node::set_data(double data){
+  _data = data;
+}
+
+void node::set_next(node* next){
+  _next = next;
+}
+
+double node::get_data(){
+  return _data;
+}
+
+node* node::get_next(){
+  return _next;
+}
+
+//void node::print(){
+//node* cursor = NULL;
+//for(cursor = this; cursor != NULL; cursor = cursor -> get_next()){
+//  cout<<cursor -> get_data() << endl;
+// }
+//}
+
+
+
+//void node::list_ins(double dat,node*& head){
+// node* cursor = NULL;
+// int counter = 0;
+// cout<<"I just reinitiated cursor"<<endl;
+// for(cursor = head; cursor != NULL; cursor = cursor -> get_next()){
+
+// cout<<"inserting"<< dat<<" cursor is"<< cursor -> get_data()<<endl;
+//  if(counter == 0 && (cursor -> get_data()) > dat){
+//    cursor -> list_ins_first(dat,head);
+//    break;
+//  }
+//  if((cursor -> get_next()) == NULL){
+//    this -> list_ins_last(dat,cursor);
+//    break;
+//  }
+//  if((cursor -> get_data()) < dat){
+//    node * check = NULL;
+//    check = (cursor -> get_next());
+//    if((check -> get_data()) > dat || (check -> get_data()) ==  dat){
+//node* temp = NULL;
+//temp = new node(dat,check);
+//cursor -> set_next(temp);
+//break;
+//    }
+//  }
+//  counter++;
+//}
+//}
+
+//void node::list_ins_last(double dat, node* cursor){
+//node* temp = NULL;
+//temp = new node(dat,NULL);
+//cursor -> set_next(temp);
+//cout<<"LAST!!!"<<endl;
+//}
+
+//void node::list_ins_first(double dat,node*& head){
+//node* temp = NULL;
+//temp = new node(dat,head);
+//head = temp;
+//cout<<"FIRST!!"<<endl;
+//}
+
+//void node::load(const char* A,node* head){
+//ifstream inputfile(A);
+//if(inputfile.fail()){
+//  cout<<"You have just failed the retard check.(Your file failed to load."<<endl;
+//  exit(1);
+//}
+//double x;
+//while(inputfile>>x){
+//  head -> list_ins(x, head);
+//}
+//inputfile.close();4
+//inputfile.clear();
+//}
+
+
+
+
+  
+
+//Private Functions:
+

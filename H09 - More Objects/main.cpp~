@@ -1,0 +1,19 @@
+#include <iostream>
+#include <cstring>
+#include "Stats.h"
+using namespace std;
+
+int main(int argc, char **argv){
+  Stats a;
+  ifstream inputfile;
+
+  a.load(argv[1], a);
+  a.print();
+
+
+
+
+
+return 0;
+}
+

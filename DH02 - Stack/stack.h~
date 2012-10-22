@@ -1,0 +1,39 @@
+#ifndef STACK_H
+#define STACK_H
+#include <cstdlib>
+#include <cmath>
+#include <iostream>
+#include "node.h"
+using namespace std;
+
+class stack {
+
+ public:
+
+  stack();
+
+  ~stack();
+
+  stack(const stack&);
+
+  stack& operator=(const stack&);
+
+  double  pop();
+
+  void push(double);
+
+  double top();
+
+  void clear();
+
+  int size();
+
+  void print();
+
+ private:
+ 
+  node* _head;
+
+  int _size;
+};
+#endif

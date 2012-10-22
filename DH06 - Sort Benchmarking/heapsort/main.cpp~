@@ -1,0 +1,156 @@
+#include <iostream>
+#include <sys/time.h>
+#include <cmath>
+#include <cstdlib>
+#include <fstream>
+
+using namespace std;
+
+void push(int&,int, int*);
+
+int pop(int&, int*, int);
+
+void reheap_up(int, int*);
+
+void reheap_down(int*, int);
+
+int parent(int);
+
+int lchild(int);
+
+int rchild(int);
+
+int main(){
+  int tail = -1;
+  struct timeval tv;
+  double tone, ttwo, total_time;
+  //double run = 13;
+  ofstream out;
+  const char* file_out = "out.dat";
+  out.open(file_out);
+  int dat;
+
+
+  for(double run = 5; run<18; run++){
+  int DATA_SIZE = int(pow(2.0,run));
+  // cout<<"OMG before init"<<endl;
+    int a[DATA_SIZE];
+    // cout<<"OMG after init"<<endl;
+
+
+    for(int j = 0; j<DATA_SIZE; j++){
+      a[j] = -1;
+    }
+    // cout<<"After filling array"<<endl;
+
+    gettimeofday(&tv,NULL);
+    tone = tv.tv_sec+tv.tv_usec/1000000.0;
+
+    srand(time(0));
+
+    for(int i = 0; i<DATA_SIZE; i++){
+      push(tail, rand(), a);
+    }
+    //  cout<<"After pushing"<<endl;
+    // cout<<"run= "<<run<<endl;
+    for(int z = 0; z<DATA_SIZE; z++){
+      dat = pop(tail, a, DATA_SIZE);
+      // cout<<"a["<<z<<"] = "<<dat<<endl;
+      //    cout<<"Made it to just after pop but not to out"<<endl;
+      out.put(dat);
+    }
+    //   cout<<"after output"<<endl;
+    // cout<<"run = "<<run<<endl;
+    // cout<<"DATA_SIZE = "<<DATA_SIZE<<endl;
+
+    gettimeofday(&tv, NULL);
+
+    ttwo = tv.tv_sec+tv.tv_usec/1000000.0;
+    total_time = ttwo-tone;
+    cout<<"T["<<run<<"] = "<<total_time<<endl;
+    cout<<"logT["<<run<<"] = "<<(log(total_time))/(log(2.0))<<endl;
+       }
+
+
+ 
+}
+
+int parent(int node){
+  if(node == 0){return -1;}
+  int parent = (node+1)/2 - 1;
+  return parent; 
+}
+
+int lchild(int node){
+  int lchild;
+  lchild = (node*2)+1;
+  return lchild;
+}
+
+int rchild(int node){
+  int rchild;
+  rchild = (node*2) +2;
+  return rchild;
+}
+
+void reheap_up(int node,int* b){
+  int temp;
+  while(b[node] > b[parent(node)]){
+    if(parent(node) == -1){return;}
+    temp = b[node];
+    b[node]= b[parent(node)];
+    b[parent(node)] = temp;
+    node = parent(node);
+  }
+}
+
+void reheap_down(int* b, int DATA_SIZE){
+  int node = 0;
+  int temp;
+
+  while(b[node] < b[lchild(node)] || b[node] < b[rchild(node)]){
+    // cout<<"Beginning"<<endl;
+  if(b[node] == -1){return;}
+    if(lchild(node) >= DATA_SIZE || rchild(node) >= DATA_SIZE){
+      // cout<<"rchild is "<<rchild(node)<<endl;
+     // cout<<"lchild is "<<lchild(node)<<endl;
+      return;}
+    // cout<<"Made it here"<<endl;
+    if(b[lchild(node)] >=  b[rchild(node)]){
+      temp = b[node];
+      b[node] = b[lchild(node)];
+      b[lchild(node)] = temp;
+      node = lchild(node);
+    }
+    else{
+      temp = b[node];
+      b[node] = b[rchild(node)];
+      b[rchild(node)] = temp;
+      node = rchild(node);
+    }
+   if(lchild(node) >= DATA_SIZE || rchild(node) >= DATA_SIZE){
+     //  cout<<"rchild is "<<rchild(node)<<endl;
+     // cout<<"lchild is "<<lchild(node)<<endl;
+      return;}
+   // cout<<"Made it after actual swap"<<endl;
+  }
+}
+
+void push(int& tail,int dat, int* b){
+  b[tail + 1] = dat;
+  tail++;
+  reheap_up(tail, b);
+}
+
+int pop(int& tail, int * b, int DATA_SIZE){
+  int top;
+  top = b[0];
+  b[0] = b[tail];
+  b[tail] = -1;
+  // cout<<"Pop is being called and tail is "<<tail<<endl;
+  reheap_down(b, DATA_SIZE);
+  // cout<<"I made it to after reheap"<<endl;
+  tail--;
+  // cout<<"tail is "<<tail<<endl;
+  return top;
+}
